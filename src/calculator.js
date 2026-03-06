@@ -6,6 +6,9 @@
  * - Subtraction (-)
  * - Multiplication (*)
  * - Division (/)
+ * - Modulo (%)
+ * - Exponentiation (^)
+ * - Square Root (√)
  */
 
 // Addition: Add two numbers together
@@ -31,6 +34,27 @@ function divide(num1, num2) {
   return num1 / num2;
 }
 
+// Modulo: Calculate the remainder of one number divided by another
+function modulo(num1, num2) {
+  if (num2 === 0) {
+    throw new Error('Cannot modulo by zero');
+  }
+  return num1 % num2;
+}
+
+// Exponentiation: Raise a base to a given exponent
+function power(base, exponent) {
+  return Math.pow(base, exponent);
+}
+
+// Square Root: Calculate the square root of a number
+function squareRoot(num) {
+  if (num < 0) {
+    throw new Error('Cannot calculate square root of negative number');
+  }
+  return Math.sqrt(num);
+}
+
 // Perform calculation based on operation
 function calculate(num1, operation, num2) {
   switch (operation) {
@@ -42,13 +66,17 @@ function calculate(num1, operation, num2) {
       return multiply(num1, num2);
     case '/':
       return divide(num1, num2);
+    case '%':
+      return modulo(num1, num2);
+    case '^':
+      return power(num1, num2);
     default:
       throw new Error(`Unknown operation: ${operation}`);
   }
 }
 
 // Export functions for testing and CLI use
-module.exports = { add, subtract, multiply, divide, calculate };
+module.exports = { add, subtract, multiply, divide, modulo, power, squareRoot, calculate };
 
 // CLI functionality
 if (require.main === module) {
@@ -57,7 +85,8 @@ if (require.main === module) {
   if (args.length !== 3) {
     console.error('Error: Invalid number of arguments');
     console.error('Usage: calculator.js <number1> <operation> <number2>');
-    console.error('Operations: +, -, *, /');
+    console.error('Operations: +, -, *, /, %, ^');
+    console.error('Special: √ <number> for square root');
     process.exit(1);
   }
 
@@ -71,8 +100,14 @@ if (require.main === module) {
   }
 
   try {
-    const result = calculate(num1, operation, num2);
-    console.log(`${num1} ${operation} ${num2} = ${result}`);
+    let result;
+    if (operation === '√') {
+      result = squareRoot(num1);
+      console.log(`√${num1} = ${result}`);
+    } else {
+      result = calculate(num1, operation, num2);
+      console.log(`${num1} ${operation} ${num2} = ${result}`);
+    }
   } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);
